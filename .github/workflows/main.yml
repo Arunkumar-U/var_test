@@ -18,8 +18,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Run Ansible Playbook
-        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          playbook: ./ansible/run_command.yml
-          environment: ${{ inputs.environment }}  # Pass the environment input
+          python-version: '3.x'
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Run Ansible Playbook
+        run: |
+          ansible-playbook ./ansible/run_command.yml --extra-vars "environment=${{ inputs.environment }}"
+
